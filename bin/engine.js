@@ -17,7 +17,6 @@ function ModuleFactory(moduleName){
         return m.getModule();
     }
     
-    
 }
 
 var RouteResolver = function(){
@@ -29,12 +28,16 @@ var RouteResolver = function(){
          * @return object { module:'', action: '' params:{}}
          * //todo user should be able to specify their own function to resolve a route
          */
-        resolveRoute:function(path){
-           var pathArray = path.substring(1).split('/');
-           log(path);
-           log(pathArray);
+        resolveRoute:function(request){
+           var pathArray = request.uri.path.substring(1).split('/');           
            
-
+           if(pathArray.length == 0){
+               return {module:'index', action:'index'};
+           }else{
+               if(pathArray.length == 1){
+                   return {module:pathArray[0], action:'index'};
+               }
+           }
         }
         
     };
@@ -44,7 +47,7 @@ var RouteResolver = function(){
 
 function stopServer(request, response){
     sys.puts('Stopping server.');
-    response.sendHeader(200, {'Content-Type':'text/plain'});
+    response.sendHeader(200, {'Content-Type':'text/html'});
     response.sendBody('Server Stopped.\n');
     response.finish();
     setTimeout(process.exit, 1);
@@ -54,10 +57,10 @@ function stopServer(request, response){
 function dispatchRequest(request, response){
     
     
-    RouteResolver.resolveRoute(request.uri.path);
-    var myMod = ModuleFactory('index');
+    var route = RouteResolver.resolveRoute(request);
+    var myMod = ModuleFactory(route.module);
 
-    var modPromise = myMod.indexAction(request, 1000);
+    var modPromise = myMod[route.action + 'Action'](request, 1000);
     
     var r = response;
     modPromise.addCallback(function(args){

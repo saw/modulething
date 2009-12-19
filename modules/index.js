@@ -6,7 +6,6 @@ var api = null;
 
 var Module = function(){
     
-    var rPromise;
     
     return {
         
