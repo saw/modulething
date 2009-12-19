@@ -1,12 +1,42 @@
-exports.init = function(api){
+var modUtils = require('../lib/utils');
+modUtils.log('foo');
+
+var api = null;
+
+
+var Module = function(){
     
+    var rPromise;
+    
+    return {
+        
+        init:function(api){
+            modUtils.log(api);
+        },
+        
+        
+        
+        indexAction:function(request, timeout){
+            
+            this.promise = new process.Promise;
+            this.promise.timeout = timeout;
+            
+            var p = this.promise;
+            setTimeout(function(){
+                p.emitSuccess('success!');
+            }, 10);
+            
+            return this.promise;
+        }
+        
+    };
     
 };
 
-exports.handleRequest = function(request, response){
+
+exports.getModule = function(a){
     
-    response.sendHeader(200, {'Content-Type':'text/plain'});
-    response.sendBody('handled by index mod!\n');
-    response.finish();
+    api = a;
+    return Module();
     
-};
+}

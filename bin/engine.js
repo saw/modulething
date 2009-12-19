@@ -1,7 +1,6 @@
 var sys = require('sys'),
    modUtils = require('../lib/utils'),
-   log = modUtils.log,
-   oop   = require('../lib/oop');
+   log = modUtils.log;
 
 //Constants
 var STOP_COMMAND = '/mod-stop';
@@ -11,9 +10,11 @@ var moduleTemplateCache = {};
 function ModuleFactory(moduleName){
     var myMod;
     if(moduleTemplateCache[moduleName]){
-        myMod = oop.clone(moduleTemplateCache[moduleName]);
+        myMod = modUtils.clone(moduleTemplateCache[moduleName]);
     }else{
-        var template = require('../modules/'+moduleName);
+        var m = require('../modules/index');
+        
+        return m.getModule();
     }
     
     
@@ -50,14 +51,21 @@ function stopServer(request, response){
 }
 
 
-
 function dispatchRequest(request, response){
-    response.sendHeader(200, {'Content-Type':'text/html'});
+    
     
     RouteResolver.resolveRoute(request.uri.path);
     var myMod = ModuleFactory('index');
-    myMod.init({});
-    myMod.handleRequest(request, response);
+
+    var modPromise = myMod.indexAction(request, 1000);
+    
+    var r = response;
+    modPromise.addCallback(function(args){
+        r.sendHeader(200, {'Content-Type':'text/plain'});
+        r.sendBody('\n');
+        r.sendBody(JSON.stringify(args), 'utf8');
+        r.finish();
+    });
 
 }
 
