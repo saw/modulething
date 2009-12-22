@@ -15,17 +15,8 @@ var Module = function(){
         
         
         
-        indexAction:function(request, timeout){
-            
-            this.promise = new process.Promise;
-            this.promise.timeout = timeout;
-            
-            var p = this.promise;
-            setTimeout(function(){
-                p.emitSuccess('success!');
-            }, 10);
-            
-            return this.promise;
+        indexAction:function(engine){
+            engine.success('Success 2!');
         }
         
     };
