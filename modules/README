@@ -1,0 +1,12 @@
+Modulething will be a modular, MVC web application framework.
+
+Design goals:
+
+* Everything is a module
+* Takes full advantage of the unique features of JS
+* Designed with concurrency and node-style asynchronous operation in mind
+* Simple to get started with
+* Flexible
+* Designed to work equally well with local databases and remote web services
+* Designed with AJAX in mind from the get go
+
