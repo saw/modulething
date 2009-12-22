@@ -33,7 +33,11 @@ var RouteResolver = function(){
                return {module:'index', action:'index'};
            }else{
                if(pathArray.length == 1){
-                   return {module:'index', action:'index'};
+                   return {module: (pathArray[0].length == 0 ? 'index' : pathArray[0]) , 
+                   
+                   action:'index'};
+               }else{
+                   return {module:pathArray[0], action:pathArray[1]}; 
                }
            }
         }
@@ -71,7 +75,11 @@ function EngineObject(request, module, action, timeout){
     }
     
     setTimeout(function(){
-        m[a+ ACTION](api);
+        try{
+            m[a+ ACTION](api);
+        }catch(e){
+            p.emitError(e);
+        }
     },0);
     
     return p;
@@ -107,6 +115,19 @@ function dispatchRequest(request, response){
             r.sendBody(args)
         }else{
             r.sendHeader(200, {'Content-Type':'text/plain'});
+            r.sendBody('\n');
+            r.sendBody(JSON.stringify(args), 'utf8');
+        }
+        
+        r.finish();
+    });
+    modPromise.addErrback(function(args){
+        if(typeof(args) == "string"){
+            r.sendHeader(500, {'Content-Type':'text/html'});
+            r.sendBody('\n');
+            r.sendBody(args);
+        }else{
+            r.sendHeader(500, {'Content-Type':'text/plain'});
             r.sendBody('\n');
             r.sendBody(JSON.stringify(args), 'utf8');
         }

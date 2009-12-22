@@ -2,7 +2,7 @@ var sys = require("sys"),
   posix = require("posix"),
   utils = require('utils');
 
-var EJS = require('../lib/templates').tmpl;
+var EJS = require('../lib/templater').tmpl;
 
 var Cache = function(){
     
@@ -52,18 +52,14 @@ var Cache = function(){
 exports.loadView = function(v, data, cacheable){
     var p = new process.Promise();
     var viewName = v;
-    var thisTemplate = Cache.get(viewName);
-    if(thisTemplate){
-        setTimeout(function(){
-            p.emitSuccess(EJS(thisTemplate, data));
-        }, 0);
-    }else{
-        var f = posix.cat('views/'+viewName+'.nhtml');
+
+        sys.puts(viewName);
+        var f = posix.cat('../views/'+viewName+'.nhtml');
         f.addCallback(function(c){
             p.emitSuccess(EJS(c, data));
-            Cache.set(viewName, c);
+            //Cache.set(viewName, c);
         });
-    }
+    
     
     return p;
 };

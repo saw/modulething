@@ -1,4 +1,6 @@
-var modUtils = require('../lib/utils');
+var modUtils = require('../lib/utils'),
+viewloader   = require('../helpers/viewLoader');
+var log = modUtils.log;
 modUtils.log('foo');
 
 var api = null;
@@ -16,7 +18,24 @@ var Module = function(){
         
         
         indexAction:function(engine){
-            engine.success('Success 2!');
+            log('here');
+            var data = {
+                title:'Hello world',
+                items:['one','two','three']   
+            };
+            
+            
+            
+            var vl = viewloader.loadView('index', data);
+            vl.addCallback(function(d){
+                engine.success(d);
+            });
+            
+            vl.addErrback(function(d){
+                engine.success(d);
+            });
+                
+            
         }
         
     };
