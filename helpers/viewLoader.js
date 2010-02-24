@@ -53,14 +53,12 @@ exports.loadView = function(v, data, cacheable){
     var p = new process.Promise();
     var viewName = v;
 
-        sys.puts(viewName);
-        var f = posix.cat('../views/'+viewName+'.nhtml');
-        f.addCallback(function(c){
-            p.emitSuccess(EJS(c, data));
-            //Cache.set(viewName, c);
-        });
-    
-    
+    sys.puts(viewName);
+    var f = posix.cat('../views/'+viewName+'.nhtml');
+    f.addCallback(function(c){
+        p.emitSuccess(EJS(c, data));
+        //Cache.set(viewName, c);
+    });
     return p;
 };
 

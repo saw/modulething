@@ -4,7 +4,8 @@
 </head>
 <body>
     <h1><%=title %></h1>
-    <ul><% for (var i; i < items.length; i++) { %>
+    <%=items[0]%>
+    <ul><% for (var i=0; i < items.length; i++) { %>
         <li><%=items[i]%></li>
         <% } %>
     </ul>

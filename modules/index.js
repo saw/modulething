@@ -23,8 +23,7 @@ var Module = function(){
                 title:'Hello world',
                 items:['one','two','three']   
             };
-            
-            
+             
             
             var vl = viewloader.loadView('index', data);
             vl.addCallback(function(d){
@@ -34,8 +33,24 @@ var Module = function(){
             vl.addErrback(function(d){
                 engine.success(d);
             });
-                
+                    
+        },
+        
+        fooAction:function(engine){
+            var data = {
+                title:'Foo World',
+                items:['one','two','three']   
+            };
+             
             
+            var vl = viewloader.loadView('index', data);
+            vl.addCallback(function(d){
+                engine.success(d);
+            });
+            
+            vl.addErrback(function(d){
+                engine.success(d);
+            });
         }
         
     };

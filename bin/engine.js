@@ -10,9 +10,12 @@ var moduleTemplateCache = {};
 
 function ModuleFactory(moduleName){
     var myMod;
-        var m = require('../modules/index');
-
-        return m.getModule();
+    try{
+    var m = require('../modules/'+moduleName);
+    }catch(e){
+    return false;
+    }
+    return m.getModule();
     
     
 }
@@ -33,6 +36,7 @@ var RouteResolver = function(){
                return {module:'index', action:'index'};
            }else{
                if(pathArray.length == 1){
+                   
                    return {module: (pathArray[0].length == 0 ? 'index' : pathArray[0]) , 
                    
                    action:'index'};
@@ -99,8 +103,13 @@ function dispatchRequest(request, response){
     
     
     var route = RouteResolver.resolveRoute(request);
-    log(route);
+
     var myMod = ModuleFactory(route.module);
+    if(!myMod){
+    response.sendHeader(404, {'Content-Type':'text/plain'});
+    response.sendBody('Module not found\n');
+    return;
+    }
     
     var modPromise = EngineObject(request, myMod, route.action, 1000);
     
