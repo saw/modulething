@@ -1,5 +1,5 @@
 var sys = require("sys"),
-  posix = require("posix"),
+  posix = require("fs"),
   utils = require('utils');
 
 var EJS = require('../lib/templater').tmpl;
@@ -49,17 +49,21 @@ var Cache = function(){
 
 
 
-exports.loadView = function(v, data, cacheable){
-    var p = new process.Promise();
+exports.loadView = function(v, data, cacheable, callback){
+
     var viewName = v;
 
     sys.puts(viewName);
-    var f = posix.cat('../views/'+viewName+'.nhtml');
-    f.addCallback(function(c){
-        p.emitSuccess(EJS(c, data));
-        //Cache.set(viewName, c);
-    });
-    return p;
+	var mycb = callback;
+    var cb = function(err, c){
+		if(!err){
+			mycb(EJS(c, data));
+		}
+        
+    };
+    fs.readfile('../views/'+viewName+'.nhtml', 'utf8', cb);
+
+
 };
 
 exports.cacheSize = function(){
