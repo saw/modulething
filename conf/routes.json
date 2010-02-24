@@ -1,0 +1,6 @@
+exports.routes = {
+
+	'/' : 'index',
+	'/about' : 'about
+
+}
