@@ -1,0 +1,13 @@
+<html>
+<head>
+<title><%=title %></title>
+</head>
+<body>
+    <h1><%=title %></h1>
+	<div class="mod">
+		<%=mod1 %>
+		<%=mod2 %>
+		<%=mod3 %>		
+	</div>
+</body>
+</html>        
