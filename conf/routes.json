@@ -1,4 +1,11 @@
 {
-	'/' : 'index',
-	'/about' : 'about'
+	"/" : {
+		"controller":"index",
+		"action":"index"
+	},
+	
+	"/about" : {
+		"controller":"about",
+		"action":"index"
+	}
 }
