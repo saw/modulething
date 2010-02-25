@@ -1,5 +1,5 @@
 var sys = require("sys"),
-  posix = require("fs"),
+  fs = require("fs"),
   utils = require('utils');
 
 var EJS = require('../lib/templater').tmpl;
@@ -49,7 +49,7 @@ var Cache = function(){
 
 
 
-exports.loadView = function(v, data, cacheable, callback){
+exports.loadView = function(v, data, callback){
 
     var viewName = v;
 
@@ -57,11 +57,13 @@ exports.loadView = function(v, data, cacheable, callback){
 	var mycb = callback;
     var cb = function(err, c){
 		if(!err){
-			mycb(EJS(c, data));
+			var out = EJS(c, data);
+
+			mycb(out);
 		}
         
     };
-    fs.readfile('../views/'+viewName+'.nhtml', 'utf8', cb);
+    fs.readFile('../views/'+viewName+'.nhtml', 'utf8', cb);
 
 
 };
